@@ -2,6 +2,7 @@
 #include <string>
 #include <cctype>
 #include <format>
+#include <array>
 
 constexpr std::size_t wordLength = 5;
 
@@ -10,6 +11,13 @@ enum class GuessStatus
 	Valid,
 	WordLengthError,
 	InvalidCharacterError
+};
+
+enum class LetterState
+{
+	Correct,
+	Present,
+	Absent
 };
 
 GuessStatus validateGuess(const std::string& guess)
@@ -24,11 +32,45 @@ GuessStatus validateGuess(const std::string& guess)
 	return GuessStatus::Valid;
 }
 
-void printGuess(const std::string& guess)
+std::array<LetterState, wordLength> scoreGuess(const std::string& guess, const std::string& answer)
 {
-	for (char c : guess)
+	std::array<LetterState, wordLength> guessResult;
+
+	for (std::size_t i = 0; i < wordLength; ++i)
 	{
-		std::cout << "\x1b[30;42m" << ' ' << c << ' ' << "\x1b[0m" << ' ';
+		if (guess[i] == answer[i])
+		{
+			guessResult[i] = LetterState::Correct;
+		}
+		else
+		{
+			guessResult[i] = LetterState::Absent;
+		}
+	}
+
+	return guessResult;
+}
+
+void printGuess(const std::string& guess, const std::array<LetterState, wordLength>& guessResult)
+{
+	for (std::size_t i = 0; i < wordLength; ++i)
+	{
+		std::string colorCode;
+
+		switch (guessResult[i])
+		{
+		case LetterState::Correct:
+			colorCode = "\x1b[30;42m";
+			break;
+		case LetterState::Present:
+			colorCode = "\x1b[30;43m";
+			break;
+		case LetterState::Absent:
+			colorCode = "\x1b[30;100m";
+			break;
+		}
+
+		std::cout << colorCode << ' ' << guess[i] << ' ' << "\x1b[0m" << ' ';
 	}
 
 	std::cout << '\n';
@@ -39,16 +81,16 @@ int main()
 {
 	std::string guess;
 
-	GuessStatus result;
+	GuessStatus status;
 
 	do
 	{
 		std::cout << "Enter your guess: ";
 		std::getline(std::cin, guess);
 
-		result = validateGuess(guess);
+		status = validateGuess(guess);
 
-		switch (result)
+		switch (status)
 		{
 		case GuessStatus::Valid:
 			break;
@@ -60,14 +102,18 @@ int main()
 			break;
 		}
 	} 
-	while (result != GuessStatus::Valid);
+	while (status != GuessStatus::Valid);
 
 	for (char& c : guess)
 	{
 		c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
 	}
 
-	printGuess(guess);
+	const std::string answer = "CRANE";
+
+	const std::array<LetterState, wordLength> guessResult = scoreGuess(guess, answer);
+
+	printGuess(guess, guessResult);
 
 	return 0;
 }
