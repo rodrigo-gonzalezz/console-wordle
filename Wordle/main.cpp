@@ -24,6 +24,17 @@ GuessStatus validateGuess(const std::string& guess)
 	return GuessStatus::Valid;
 }
 
+void printGuess(const std::string& guess)
+{
+	for (char c : guess)
+	{
+		std::cout << "\x1b[30;42m" << ' ' << c << ' ' << "\x1b[0m" << ' ';
+	}
+
+	std::cout << '\n';
+}
+
+
 int main()
 {
 	std::string guess;
@@ -51,7 +62,12 @@ int main()
 	} 
 	while (result != GuessStatus::Valid);
 
-	std::cout << "Your guess: " << guess << '\n';
+	for (char& c : guess)
+	{
+		c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+	}
+
+	printGuess(guess);
 
 	return 0;
 }
