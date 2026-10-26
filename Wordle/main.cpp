@@ -6,6 +6,8 @@
 
 constexpr std::size_t wordLength = 5;
 
+constexpr char usedLetter = '_';
+
 enum class GuessStatus
 {
 	Valid,
@@ -36,19 +38,30 @@ std::array<LetterState, wordLength> scoreGuess(const std::string& guess, const s
 {
 	std::array<LetterState, wordLength> guessResult;
 
+	guessResult.fill(LetterState::Absent);
+
+	std::string letterPool = answer;
+
 	for (std::size_t i = 0; i < wordLength; ++i)
 	{
 		if (guess[i] == answer[i])
 		{
 			guessResult[i] = LetterState::Correct;
+			letterPool[i] = usedLetter;
 		}
-		else if (answer.find(guess[i]) != std::string::npos)
+	}
+
+	for (std::size_t i = 0; i < wordLength; ++i)
+	{
+		if (guessResult[i] != LetterState::Correct)
 		{
-			guessResult[i] = LetterState::Present;
-		}
-		else
-		{
-			guessResult[i] = LetterState::Absent;
+			const std::size_t position = letterPool.find(guess[i]);
+
+			if (position != std::string::npos)
+			{
+				guessResult[i] = LetterState::Present;
+				letterPool[position] = usedLetter;
+			}	
 		}
 	}
 
