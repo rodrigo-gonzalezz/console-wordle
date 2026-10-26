@@ -42,6 +42,10 @@ std::array<LetterState, wordLength> scoreGuess(const std::string& guess, const s
 		{
 			guessResult[i] = LetterState::Correct;
 		}
+		else if (answer.find(guess[i]) != std::string::npos)
+		{
+			guessResult[i] = LetterState::Present;
+		}
 		else
 		{
 			guessResult[i] = LetterState::Absent;
