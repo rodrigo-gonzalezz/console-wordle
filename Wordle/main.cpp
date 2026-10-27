@@ -6,6 +6,8 @@
 
 constexpr std::size_t wordLength = 5;
 
+constexpr std::size_t maxAttempts = 6;
+
 constexpr char usedLetter = '_';
 
 enum class GuessStatus
