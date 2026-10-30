@@ -2,14 +2,35 @@
 #include "Score.h"
 #include "Display.h"
 #include "GameRules.h"
+#include "WordList.h"
 
 #include <iostream>
 #include <string>
 #include <array>
+#include <vector>
+#include <format>
 
 
 int main()
 {
+	const std::string filePath = "words.txt";
+
+	const std::optional<std::vector<std::string>> words = readWords(filePath);
+
+	if (words.has_value())
+	{
+		std::cout << words->size() << '\n';
+	}
+	else
+	{
+		std::cerr << std::format("Couldn't open the file {}\n", filePath);
+
+		return 1;
+	}
+
+	
+
+	
 	const std::string answer = "CRANE";
 
 	bool guessedCorrectly = false;

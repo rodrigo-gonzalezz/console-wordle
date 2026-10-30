@@ -1,0 +1,15 @@
+CRANE
+SLATE
+apple
+TRAIN
+cat
+GHOST
+
+BRICK
+h3llo
+PLANTS
+Crown
+FLAME
+EERIE
+HOUSE
+STORM 
