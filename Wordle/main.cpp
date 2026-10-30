@@ -29,8 +29,6 @@ int main()
 	}
 
 	
-
-	
 	const std::string answer = "CRANE";
 
 	bool guessedCorrectly = false;
